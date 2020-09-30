@@ -1,0 +1,38 @@
+#data folder
+data/
+*.sqlite3
+*.sqlite3-journal
+
+#testing folder
+testing/
+
+#other cache and checkpoints
+__pycache__/
+.ipynb_checkpoints/
+
+#mongodb folder cache
+mongodb/
+
+#.vscode files
+.vscode/settings.json
+
+#pylint config
+.pylintrc
+
+#python cache
+*.pyc
+
+#config
+config.py
+
+#venv
+venv/
+
+#idea files
+.idea/
+
+#asv files
+*.asv
+
+#xml files
+*.xml
