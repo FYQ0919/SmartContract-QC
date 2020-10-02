@@ -36,3 +36,4 @@ venv/
 
 #xml files
 *.xml
+/Inspection_Contract.py

@@ -3,7 +3,12 @@
 # this tutorial so the flask code won't be commented. that way we can focus on
 # how we're working with our smart contract
 from flask import Flask, request, render_template
+from elena.emulators.network_emulator import app, add_routes
+from threading import Thread
+import time
+#run another contract
 import os
+from Inspect import QC_simulation
 # solc is needed to compile our Solidity code
 from solc import compile_source
 
@@ -12,6 +17,9 @@ from web3 import Web3, HTTPProvider
 
 # we'll use ConciseContract to interact with our specific instance of the contract
 from web3.contract import ConciseContract
+
+# multiprocess
+from multiprocessing import Process,Pool
 
 # initialize our flask app
 app = Flask(__name__)
@@ -117,6 +125,7 @@ def index():
     # so we have to loop through our names and fetch the current vote total for each one.
     candidates = {}
     for candidate_name in candidate_names:
+
         votes_for_candidate = contract_instance.totalVotesFor(candidate_name)
         # we have to convert the candidate_name back into a string. we get it back as bytes32
         # we also want to strip the tailing \x00 empty bytes if our names were shorter than 32 bytes
@@ -125,13 +134,25 @@ def index():
         candidates[candidate_name_string] = votes_for_candidate
 
     return render_template('index.html', candidates=candidates, alert=alert)
+def run():
+    app.run(debug=True, use_reloader=False)
+    time.sleep(1)
 def inspect():
-    os.system("python yangqing/Inspection_Contract")
-
+    os.system("python ./Inspect.py")
+    time.sleep(1)
 if __name__ == '__main__':
     # set debug=True for easy development and experimentation
     # set use_reloader=False. when this is set to True it initializes the flask app twice. usually
     # this isn't a problem, but since we deploy our contract during initialization it ends up getting
     # deployed twice. when use_reloader is set to False it deploys only once but reloading is disabled
-    app.run(debug=True, use_reloader=False)
-    inspect()
+    a = Thread(target=run)
+    b = Thread(target=inspect)
+    a.start()
+    b.start()
+
+
+
+
+
+
+
