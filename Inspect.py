@@ -14,7 +14,7 @@ import time
 import pandas as pd
 
 class QC_simulation:
-    def __init__(self,headers = {'Content-Type': "application/json",},consensus_mode = "majority",score_type = "majority",learning = True,threshold = 5,input_num = 1,
+    def __init__(self,headers = {'Content-Type': "application/json",},consensus_mode = "majority",score_type = "majority",threshold = 5,input_num = 1,
                                        total_products = 5, total_workcells = 17,ip = '127.0.0.1'):
 
        self.headers = headers
@@ -56,11 +56,12 @@ class QC_simulation:
            raise KeyError(f"Number of workpieces is not {self.total_products}")
 
 
-    def instantiate_objects(self,threshold, consensus_mode, score_list, learning):
+    def instantiate_objects(self,threshold, consensus_mode):
         # Instantiate objects
         print("Instantiating objects...")
         # Instantiate objects
         quality_controllers = {
+
           f"wc_{i + 1}": Workcell(
             step_idx=i + 1,
             id=f"wc_{i + 1}",
@@ -282,7 +283,7 @@ class QC_simulation:
 if __name__ == '__main__':
     QC = QC_simulation()
 
-    qc, wp, trans = QC.instantiate_objects(threshold = 5, consensus_mode = "majority" , score_list ="majority", learning =True)
+    qc, wp, trans = QC.instantiate_objects(threshold = 5, consensus_mode = "majority")
     add_routes(qc, threshold = 5)
     t = Thread(
         target=QC.simulate,
